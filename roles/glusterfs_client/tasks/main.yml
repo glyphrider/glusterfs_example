@@ -1,0 +1,29 @@
+---
+
+- name: install glusterfs-client
+  yum:
+    name: glusterfs-client
+    state: present
+  become: yes
+
+- name: establish mount point
+  file:
+    path: /storage/data
+    state: directory
+  become: yes
+
+- name: mount glusterfs
+  mount:
+    fstype: glusterfs
+    src: glusterfs1:/data
+    path: /storage/data
+    opts: backup-volfile-servers=glusterfs2:glusterfs3
+    state: mounted
+  become: yes
+
+- name: adjust permissions on share
+  file:
+    dest: /storage/data
+    mode: o=rwx
+  become: yes
+

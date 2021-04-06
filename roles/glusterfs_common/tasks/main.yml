@@ -1,0 +1,11 @@
+---
+- name: yum update cache
+  yum:
+    update_cache: yes
+  become: yes
+
+- name: yum install glusterfs pre-requisites
+  yum:
+    name: centos-release-gluster
+    state: present
+  become: yes

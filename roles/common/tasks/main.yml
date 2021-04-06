@@ -1,0 +1,12 @@
+---
+- import_tasks: update_apt.yml
+  when: (ansible_facts['os_family'] == "Debian")
+
+- import_tasks: update_yum.yml
+  when: (ansible_facts['os_family'] == "RedHat")
+
+- name: Generate /etc/hosts
+  template:
+    src: "etc_hosts.j2"
+    dest: "/etc/hosts"
+  become: yes

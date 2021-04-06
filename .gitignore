@@ -1,0 +1,7 @@
+.terraform*
+terraform*
+ansible
+ansible.pub
+cloudinit.yml
+mkinventory
+inventory.yml

@@ -1,0 +1,49 @@
+---
+- name: fdisk /dev/vdb
+  parted:
+    device: /dev/vdb
+    number: 1
+    state: present
+    fs_type: xfs
+  become: yes
+
+- name: mkfs /dev/vdb1
+  filesystem:
+    fstype: xfs
+    dev: /dev/vdb1
+  become: yes
+
+- name: establish mount point
+  file:
+    path: /storage
+    state: directory
+  become: yes
+
+- name: mount /dev/vdb1
+  mount:
+    fstype: xfs
+    src: /dev/vdb1
+    path: /storage
+    state: mounted
+  become: yes
+
+- name: install glusterfs-server
+  yum:
+    name: glusterfs-server
+    state: present
+  become: yes
+
+- name: activate glusterd service
+  systemd:
+    daemon_reload: yes
+    name: glusterd
+    state: started
+    enabled: yes
+  become: yes
+
+
+- name: ReGenerate /etc/hosts
+  template:
+    src: "etc_hosts.j2"
+    dest: "/etc/hosts"
+  become: yes

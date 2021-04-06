@@ -1,0 +1,20 @@
+---
+- hosts: all
+  roles:
+    - common
+    - glusterfs_common
+
+- hosts: glusterfs1 glusterfs2 glusterfs3
+  roles:
+    - glusterfs_server
+
+- hosts: glusterfs1
+  roles:
+    - glusterfs_master
+  vars:
+    - cluster_peers: [ glusterfs2, glusterfs3 ]
+    - all_cluster_nodes: [ glusterfs1, glusterfs2, glusterfs3 ]
+
+- hosts: glusterclient
+  roles:
+    - glusterfs_client

@@ -1,0 +1,41 @@
+---
+#- name: establish peering
+#  shell:
+#    cmd: gluster peer probe {{ item }}
+#  become: yes
+#  when: ansible_hostname  == "glusterfs1" and item != "glusterfs1"
+#  with_items: "{{ ansible_play_batch }}"
+
+- name: establish peering
+  gluster.gluster.gluster_peer:
+    state: present
+    nodes: "{{ cluster_peers }}"
+  become: yes
+
+#- name: create volume
+#  shell:
+#    cmd: gluster volume create namefiles replica 3 glusterfs1:/storage/data glusterfs2:/storage/data glusterfs3:/storage/data
+#  when: ansible_hostname == "glusterfs1"
+#  run_once: true
+#  become: yes
+
+- name: create volume
+  gluster.gluster.gluster_volume:
+    state: present
+    name: data
+    bricks: /storage/data
+    replicas: 3
+    cluster: "{{ all_cluster_nodes }}"
+  become: yes
+
+#- name: start volume
+#  shell:
+#    cmd: gluster volume start namefiles
+#  become: yes
+#  when: ansible_hostname == "glusterfs1"
+#  run_once: true
+#  become: yes
+#  gluster.gluster.gluster_volume:
+#    name: namefiles
+#    state: started
+#    when: ansible_hostname == "glusterfs1"
